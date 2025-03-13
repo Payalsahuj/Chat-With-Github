@@ -56,3 +56,62 @@ export const popularRepos: PopularRepo[] = [
     forks: 28000,
   },
 ];
+
+// Function to get repository information
+export const getRepositoryInfo = async (
+  owner: string,
+  repo: string
+): Promise<Repository> => {
+  try {
+    // Add a timestamp to prevent caching issues
+    const timestamp = new Date().getTime();
+    const response = await fetch(
+      `https://api.github.com/repos/${owner}/${repo}?timestamp=${timestamp}`,
+      {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        throw new Error(`Repository ${owner}/${repo} not found`);
+      } else if (response.status === 403) {
+        throw new Error("API rate limit exceeded. Please try again later.");
+      } else {
+        throw new Error(
+          `Failed to fetch repository: ${response.status} ${response.statusText}`
+        );
+      }
+    }
+
+    const data = await response.json();
+
+    // Ensure all required fields exist, setting defaults for nullable fields
+    return {
+      id: data.id,
+      name: data.name,
+      full_name: data.full_name,
+      owner: {
+        login: data.owner.login,
+        avatar_url: data.owner.avatar_url,
+      },
+      description: data.description || "No description provided",
+      html_url: data.html_url,
+      stargazers_count: data.stargazers_count || 0,
+      watchers_count: data.watchers_count || 0,
+      forks_count: data.forks_count || 0,
+      open_issues_count: data.open_issues_count || 0,
+      language: data.language || "Not specified",
+      topics: data.topics || [],
+      created_at: data.created_at,
+      updated_at: data.updated_at,
+      visibility: data.visibility || "public",
+    };
+  } catch (error) {
+    console.error("Error fetching repository:", error);
+    throw error;
+  }
+};
