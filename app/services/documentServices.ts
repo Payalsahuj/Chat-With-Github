@@ -48,3 +48,21 @@ export const TextToEmbedding = async (text: string) => {
       );
     });
 };
+
+export const findSimilarDocs = async (text: string, repoId: number) => {
+  const embedding = await TextToEmbedding(text);
+  const supabase = createClient(
+    process.env.SUPABASE_URL || "",
+    process.env.SUPABASE_KEY || ""
+  );
+
+  const response = await supabase.rpc("search_embeddings_exact", {
+    p_query_vector: JSON.stringify(embedding),
+    p_repo_id: repoId,
+    p_limit: 4,
+  });
+
+  return response?.data?.map((val: { content: string }) => {
+    return val?.content + "\n\n";
+  });
+};
