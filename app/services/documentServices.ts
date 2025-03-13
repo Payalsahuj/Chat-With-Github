@@ -49,6 +49,32 @@ export const TextToEmbedding = async (text: string) => {
     });
 };
 
+// Postgres function
+// CREATE OR REPLACE FUNCTION search_embeddings_exact(
+//   p_repo_id INT8,
+//   p_query_vector TEXT,  -- Accept as text to avoid dimension issues
+//   p_limit INT DEFAULT 5
+// )
+// RETURNS TABLE (
+//   id INT8,
+//   content TEXT,
+//   distance FLOAT
+// )
+// LANGUAGE SQL
+// AS $$
+//   SELECT
+//       e.id,
+//       e.content,
+//       e.embedding <-> p_query_vector::vector AS distance
+//   FROM
+//       embeddings e
+//   WHERE
+//       e.repo_id = p_repo_id
+//   ORDER BY
+//       distance
+//   LIMIT p_limit;
+// $$;
+
 export const findSimilarDocs = async (text: string, repoId: number) => {
   const embedding = await TextToEmbedding(text);
   const supabase = createClient(
