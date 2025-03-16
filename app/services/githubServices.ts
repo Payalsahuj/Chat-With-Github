@@ -1,3 +1,7 @@
+import axios from "axios";
+import { createClient } from "@supabase/supabase-js";
+import { TextToEmbedding } from "./documentServices";
+
 // Types
 export type Repository = {
   id: number;
