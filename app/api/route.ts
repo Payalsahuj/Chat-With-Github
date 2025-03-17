@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 
   // find similar docs
   if (response.isNew) {
-    await getRepoFilesContent(owner, repo, null, 1600, response?.repo?.id);
+    await getRepoFilesContent(owner, repo, null, 12, response?.repo?.id);
   }
   return new Response(
     JSON.stringify({

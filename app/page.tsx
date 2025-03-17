@@ -21,11 +21,6 @@ const Index = () => {
       );
       return;
     }
-    await axios
-      .get(`/api?owner=${parsedRepo.owner}&repo=${parsedRepo.repo}`)
-      .then((response) => {
-        localStorage.setItem("repoId", response.data?.repo?.id);
-      });
 
     setError("");
     navigate.push(`/chat?owner=${parsedRepo.owner}&repo=${parsedRepo.repo}`);
@@ -38,7 +33,7 @@ const Index = () => {
       <main className="flex-1 container mx-auto px-4 max-w-5xl py-10">
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-4xl font-semibold mb-3 text-navy">
-            GitHub Repo Chat
+            Chat with Github Repo
           </h1>
           <p className="text-xl text-text-secondary max-w-2xl mx-auto">
             Enter any GitHub repository or select from popular ones to chat
