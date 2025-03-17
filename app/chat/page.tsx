@@ -29,39 +29,47 @@ const Chat = () => {
     "Languages used?",
   ];
 
-  useEffect(() => {
-    const fetchRepository = async () => {
-      if (!owner || !repo) {
-        setError("Invalid repository information");
-        setLoading(false);
-        return;
-      }
-      await axios.get(`/api?owner=${owner}&repo=${repo}`).then((response) => {
+  const fetchRepository = async () => {
+    if (!owner || !repo) {
+      setError("Invalid repository information");
+      setLoading(false);
+      return;
+    }
+    await axios
+      .get(`/api?owner=${owner}&repo=${repo}`)
+      .then((response) => {
         localStorage.setItem("repoId", response.data?.data?.repo?.id);
+      })
+      .catch((error) => {
+        // Retry, this is hacky but doing this temporarily to avoid timeout issues
+        axios.get(`/api?owner=${owner}&repo=${repo}`).then((response) => {
+          localStorage.setItem("repoId", response.data?.data?.repo?.id);
+        });
       });
-      try {
-        const repoData = await getRepositoryInfo(owner, repo);
-        setRepository(repoData);
+    try {
+      const repoData = await getRepositoryInfo(owner, repo);
+      setRepository(repoData);
 
-        // Add initial welcome message
-        setMessages([
-          {
-            id: "0",
-            text: `Welcome! Ask me anything about ${owner}/${repo}. You can ask about stats, features, or anything related to this repository.`,
-            sender: "assistant",
-            timestamp: new Date(),
-          },
-        ]);
-      } catch (err) {
-        setError(
-          `Failed to load repository information. The repository may not exist or there might be connection issues.`
-        );
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+      // Add initial welcome message
+      setMessages([
+        {
+          id: "0",
+          text: `Welcome! Ask me anything about ${owner}/${repo}. You can ask about stats, features, or anything related to this repository.`,
+          sender: "assistant",
+          timestamp: new Date(),
+        },
+      ]);
+    } catch (err) {
+      setError(
+        `Failed to load repository information. The repository may not exist or there might be connection issues.`
+      );
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchRepository();
   }, [owner, repo]);
 

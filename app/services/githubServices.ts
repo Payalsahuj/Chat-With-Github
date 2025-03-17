@@ -215,20 +215,23 @@ export async function getRepoFilesContent(
           // Handle binary files gracefully
           transformResponse: [(data: any) => data],
         });
-        const embedding = await TextToEmbedding(
-          `//${item.path}\n${contentResponse.data}`
+
+        // do not wait for embedding gen, hack for bypassing vercel free plan limits
+        TextToEmbedding(`//${item.path}\n${contentResponse.data}`).then(
+          (embedding) => {
+            supabase
+              .from("embeddings")
+              .insert({
+                repo_id: id,
+                content: `//${item.path}\n${contentResponse.data}`,
+                embedding,
+              })
+              .then((res) => {
+                console.log(res);
+              });
+          }
         );
         console.log({ id });
-        await supabase
-          .from("embeddings")
-          .insert({
-            repo_id: id,
-            content: `//${item.path}\n${contentResponse.data}`,
-            embedding,
-          })
-          .then((res) => {
-            console.log(res);
-          });
 
         // Add to our files array
         files.push({
