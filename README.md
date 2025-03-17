@@ -4,6 +4,10 @@ An AI-powered tool that allows you to interact with any public GitHub repository
 
 **[Live Demo](https://chat-with-github.vercel.app/)**
 
+
+https://github.com/user-attachments/assets/f8734dc8-ce08-45e3-9b25-7a4ddb087817
+
+
 ## Features
 
 *   **Chat with any Public GitHub Repo:**  Just paste the URL, and start asking questions!
