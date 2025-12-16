@@ -20,22 +20,24 @@ const ChatInput = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex items-center">
+    <form onSubmit={handleSubmit} className="flex items-stretch">
       <input
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         placeholder={placeholder}
-        className="input-field rounded-r-none"
+        className="w-full px-4 py-3 rounded-l-xl rounded-r-none border border-border bg-white focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-border shadow-input flex-1"
+        style={{ transition: "none", borderRadius: "12px 0 0 12px" }}
       />
       <button
         type="submit"
         disabled={!message.trim()}
-        className={`btn px-6 py-3 rounded-l-none flex items-center justify-center ${
+        className={`px-6 py-3 rounded-r-xl rounded-l-none flex items-center justify-center font-medium transition-default focus:outline-none whitespace-nowrap ${
           message.trim()
             ? "bg-navy text-white hover:bg-navy-light"
             : "bg-gray-200 text-text-tertiary cursor-not-allowed"
         }`}
+        style={{ borderRadius: "0 12px 12px 0" }}
       >
         <span>Send</span>
       </button>

@@ -49,7 +49,13 @@ const Index = () => {
             {`Paste a GitHub repository URL or enter in "owner/repo" format`}
           </p>
 
-          <div className="flex flex-col sm:flex-row items-center mb-2">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleStartChatting();
+            }}
+            className="flex flex-col sm:flex-row items-center mb-2"
+          >
             <div className="flex items-center w-full mb-4 sm:mb-0">
               <div className="bg-card-light p-3 rounded-l border border-r-0 border-border">
                 <svg
@@ -68,16 +74,17 @@ const Index = () => {
                   setRepoInput(e.target.value);
                   if (error) setError("");
                 }}
-                className="input-field rounded-l-none rounded-r-none flex-1"
+                className="w-full px-4 py-3 rounded-l-none rounded-r-none border border-border bg-white focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-border shadow-input flex-1"
+                style={{ transition: "none" }}
               />
             </div>
             <button
-              onClick={handleStartChatting}
+              type="submit"
               className="btn-primary sm:rounded-l-none w-full sm:w-auto whitespace-nowrap"
             >
               Start Chatting
             </button>
-          </div>
+          </form>
 
           {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
         </div>
